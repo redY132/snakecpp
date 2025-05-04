@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/snake.dir/link.d CMakeFiles/snake.dir/main.cpp.o -o snake  -lcurses -lform
