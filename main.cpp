@@ -78,6 +78,7 @@ bool updateBoard(std::vector<std::vector<char>>& board, std::pair<int, int>* hea
         return false;
     }
 
+    bool shouldCreateNew {false};
     if(!(board[head_cords_ptr -> second][head_cords_ptr -> first] == '$'))
     {
         board[snake_body -> back().second][snake_body -> back().first] = ' ';
@@ -87,12 +88,16 @@ bool updateBoard(std::vector<std::vector<char>>& board, std::pair<int, int>* hea
         ++*score;
         if(*score == board.size() * board.size())
             end_game(*score, board.size() * board.size());
-        createApples(board);
+        shouldCreateNew = true;
     };
 
     board[head_cords_ptr -> second][head_cords_ptr -> first] = 'X';
 
     snake_body -> push_front(*head_cords_ptr);
+
+    if (shouldCreateNew) {
+        createApples(board);
+    }
 
     return true;
 }
@@ -149,7 +154,7 @@ void createApples(std::vector<std::vector<char>>& board)
         std::uniform_int_distribution<> dist(0, board.size() - 1);
         int y = dist(gen);
         int x = dist(gen);
-        if(board[y][x] != 'X'|| board[y][x] != 'O' || board[y][x] != '$')
+        if(board[y][x] != 'X' && board[y][x] != 'O' && board[y][x] != '$')
         {
             board[y][x] = '$';
             break;
