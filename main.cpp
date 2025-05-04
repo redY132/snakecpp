@@ -1,17 +1,12 @@
 #include <chrono>
 #include <cstdlib>
-#include <cstring>
 #include <deque>
-#include <iostream>
-#include <iterator>
 #include <random>
-#include <string>
 #include <thread>
 #include <utility>
 #include <vector>
 #include <curses.h>
 #include "funcs.h"
-#include <cmath>
 
 std::vector<std::vector<char>> init_board(int size, int startX, int startY, std::deque<std::pair<int, int>>* body){
     std::vector<std::vector<char>> board;
@@ -34,10 +29,6 @@ void print_screen(const std::vector<std::vector<char>>& board){
         int row_len = (2 * board[y].size() + 3);
         char row[row_len];
         row[0] = 'O';
-        //size of 21
-        //x is less than 21
-        //at y == 0
-        //x == 20
         for(int x = 1; x < (2 * board[y].size()); x+=2){
             row[x] = board[y][x/2];
             row[x + 1] = ' ';
@@ -54,14 +45,11 @@ void end_game(int score, int total){
     clear();
     if (score == total) {
         printw("You Win!\n");
-        // std::cout << "You Win!\n";
     }
     else {
         printw("You Lose!\n");
-        // std::cout << "You Lose!\n";
     }
     printw("Score: %d/%d", score, total);
-    // std::cout << "Score: " << score << "/" << total;
     refresh();
 }
 
