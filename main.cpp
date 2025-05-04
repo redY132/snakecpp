@@ -69,12 +69,12 @@ bool valid_position(std::pair<int, int>* cords_ptr, int size){
 bool updateBoard(std::vector<std::vector<char>>& board, std::pair<int, int>* head_cords_ptr, 
                  bool moving_x, bool positive, int* score, std::deque<std::pair<int, int>>* snake_body){
     if(!valid_position(head_cords_ptr, board.size()) || *score == board.size() * board.size()){
-        end_game(*score, board.size() * board.size());
+        end_game(*score, (board.size() * board.size()) - 1);
         return false;
     }
 
     if (board[head_cords_ptr -> second][head_cords_ptr -> first] == 'X') {
-        end_game(*score, board.size() * board.size());
+        end_game(*score, (board.size() * board.size()) - 1);
         return false;
     }
 
@@ -86,8 +86,10 @@ bool updateBoard(std::vector<std::vector<char>>& board, std::pair<int, int>* hea
     }
     else{
         ++*score;
-        if(*score == board.size() * board.size())
-            end_game(*score, board.size() * board.size());
+        if(*score == (board.size() * board.size()) - 1){
+            end_game(*score, (board.size() * board.size()) - 1);
+            return false;
+        }
         shouldCreateNew = true;
     };
 
@@ -182,6 +184,7 @@ int main (int argc, char *argv[]) {
     createApples(board);
 
     noecho();
+    curs_set(0);
 
     std::pair<int, int> head_cords {0, 0};
     std::pair<int, int> tail_cords {0, 0};
