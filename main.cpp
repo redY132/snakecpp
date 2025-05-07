@@ -129,20 +129,30 @@ void takeInput(bool* moving_x, bool* positive, bool* gameRunning){
         char input = getch();
         if(input == 'd')
         {
-            *moving_x = true;
-            *positive = true;
+            if(!*moving_x){
+                *moving_x = true;
+                *positive = true;
+            }
         }
         else if (input == 'a') {
-            *moving_x = true;
-            *positive = false;
+            if(!*moving_x){
+                *moving_x = true;
+                *positive = false;
+            }
         }
         else if (input == 'w') {
-            *moving_x = false;
-            *positive = true;
+            if(*moving_x){
+                *moving_x = false;
+                *positive = true;
+            }
+
         }
         else if (input == 's') {
-            *moving_x = false;
-            *positive = false;
+            if(*moving_x){
+                *moving_x = false;
+                *positive = false;
+            }
+            
         }
     }
 }
@@ -166,16 +176,22 @@ void createApples(std::vector<std::vector<char>>& board)
 
 int main (int argc, char *argv[]) {
     initscr();
-    start_color();
-    init_pair(1, COLOR_GREEN, COLOR_BLACK);
 
     printw("Type Preferred Size\n");
     refresh();
 
-    char buffer[2];
-    getnstr(buffer, sizeof(buffer));
+    char sizeBuffer[2];
+    getnstr(sizeBuffer, sizeof(sizeBuffer));
 
-    int size = std::atoi(buffer);
+    int size = std::atoi(sizeBuffer);
+
+    printw("Type Preferred Speed\n");
+    refresh();
+
+    char speedBuffer[1];
+    getnstr(speedBuffer, sizeof(speedBuffer));
+
+    int speed = 500 / std::atoi(speedBuffer);
 
     std::deque<std::pair<int, int>> snake_body;
 
@@ -199,7 +215,7 @@ int main (int argc, char *argv[]) {
 
     while(gameRunning){
         print_screen(board);
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(speed));
         movePos(&head_cords, moving_x, positive);
         gameRunning = updateBoard(board, &head_cords, moving_x, positive, &char_score, &snake_body);
     }
