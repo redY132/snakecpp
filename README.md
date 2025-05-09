@@ -1,3 +1,1 @@
-install ncurses  
-make in build  
-run snake  
+snake in build
