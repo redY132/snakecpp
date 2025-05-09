@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/redley/coding/projects/snake
+# CMAKE_SOURCE_DIR = /home/redley/coding/projects/snake
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/redley/coding/projects/snake/build
+# CMAKE_BINARY_DIR = /home/redley/coding/projects/snake/build
 
 #=============================================================================
 # Targets provided globally by CMake.
