@@ -232,8 +232,6 @@ int main (int argc, char *argv[]) {
         gameRunning = updateBoard(board, &head_cords, moving_x, positive, &char_score, &snake_body, &gameRunning);
     }
 
-    inputThread.join();
-    
     endwin();
 
     return 0;
