@@ -24,7 +24,6 @@ std::vector<std::vector<char>> init_board(int size, int startX, int startY, std:
 
 void print_screen(const std::vector<std::vector<char>>& board){
     clear();
-
     for(int y = 0; y < board.size(); y++){
         int row_len = (2 * board[y].size() + 3);
         char row[row_len];
@@ -41,8 +40,7 @@ void print_screen(const std::vector<std::vector<char>>& board){
     refresh();
 };
 
-void end_game(int score, int total){
-    clear();
+void end_game(int score, int total, bool* gameRunning){
     if (score == total) {
         printw("You Win!\n");
     }
@@ -50,7 +48,12 @@ void end_game(int score, int total){
         printw("You Lose!\n");
     }
     printw("Score: %d/%d", score, total);
+    printw("\nPress q to quit");
     refresh();
+
+    while(*gameRunning){
+
+    }
 }
 
 bool valid_position(std::pair<int, int>* cords_ptr, int size){
@@ -67,14 +70,15 @@ bool valid_position(std::pair<int, int>* cords_ptr, int size){
 
 //direction of 1 is x, direction of 0 is y
 bool updateBoard(std::vector<std::vector<char>>& board, std::pair<int, int>* head_cords_ptr, 
-                 bool moving_x, bool positive, int* score, std::deque<std::pair<int, int>>* snake_body){
+                 bool moving_x, bool positive, int* score, std::deque<std::pair<int, int>>* snake_body
+                 , bool* gameRunning){
     if(!valid_position(head_cords_ptr, board.size()) || *score == board.size() * board.size()){
-        end_game(*score, (board.size() * board.size()) - 1);
+        end_game(*score, (board.size() * board.size()) - 1, gameRunning);
         return false;
     }
 
     if (board[head_cords_ptr -> second][head_cords_ptr -> first] == 'X') {
-        end_game(*score, (board.size() * board.size()) - 1);
+        end_game(*score, (board.size() * board.size()) - 1, gameRunning);
         return false;
     }
 
@@ -87,7 +91,7 @@ bool updateBoard(std::vector<std::vector<char>>& board, std::pair<int, int>* hea
     else{
         ++*score;
         if(*score == (board.size() * board.size()) - 1){
-            end_game(*score, (board.size() * board.size()) - 1);
+            end_game(*score, (board.size() * board.size()) - 1, gameRunning);
             return false;
         }
         shouldCreateNew = true;
@@ -125,7 +129,7 @@ void movePos(std::pair<int, int>* pos_pair_ptr, bool moving_x, bool positive){
 }
 
 void takeInput(bool* moving_x, bool* positive, bool* gameRunning){
-    while (*gameRunning) {
+    while(*gameRunning){
         char input = getch();
         if(input == 'd')
         {
@@ -134,25 +138,31 @@ void takeInput(bool* moving_x, bool* positive, bool* gameRunning){
                 *positive = true;
             }
         }
-        else if (input == 'a') {
+
+        if (input == 'a') {
             if(!*moving_x){
                 *moving_x = true;
                 *positive = false;
             }
         }
-        else if (input == 'w') {
+
+        if (input == 'w') {
             if(*moving_x){
                 *moving_x = false;
                 *positive = true;
             }
 
         }
-        else if (input == 's') {
+
+        if (input == 's') {
             if(*moving_x){
                 *moving_x = false;
                 *positive = false;
             }
-            
+        }
+
+        if (input == 'q') {
+            *gameRunning = false;
         }
     }
 }
@@ -180,7 +190,8 @@ int main (int argc, char *argv[]) {
     printw("Type Preferred Size\n");
     refresh();
 
-    char sizeBuffer[2];
+    char sizeBuffer[3];
+    sizeBuffer[2] = '\0';
     getnstr(sizeBuffer, sizeof(sizeBuffer));
 
     int size = std::atoi(sizeBuffer);
@@ -188,7 +199,8 @@ int main (int argc, char *argv[]) {
     printw("Type Preferred Speed\n");
     refresh();
 
-    char speedBuffer[1];
+    char speedBuffer[2];
+    speedBuffer[1] = '\0';
     getnstr(speedBuffer, sizeof(speedBuffer));
 
     int speed = 500 / std::atoi(speedBuffer);
@@ -217,12 +229,11 @@ int main (int argc, char *argv[]) {
         print_screen(board);
         std::this_thread::sleep_for(std::chrono::milliseconds(speed));
         movePos(&head_cords, moving_x, positive);
-        gameRunning = updateBoard(board, &head_cords, moving_x, positive, &char_score, &snake_body);
+        gameRunning = updateBoard(board, &head_cords, moving_x, positive, &char_score, &snake_body, &gameRunning);
     }
 
-    inputThread.detach();
+    inputThread.join();
     
-    getch();
     endwin();
 
     return 0;
