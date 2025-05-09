@@ -1,3 +1,0 @@
-/home/redley/coding/projects/snake/build/CMakeFiles/snake.dir
-/home/redley/coding/projects/snake/build/CMakeFiles/edit_cache.dir
-/home/redley/coding/projects/snake/build/CMakeFiles/rebuild_cache.dir
