@@ -1,1 +1,1 @@
-snake in build
+build snake.cpp
