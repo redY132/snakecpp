@@ -1,1 +1,1 @@
-build snake.cpp
+build main.cpp
